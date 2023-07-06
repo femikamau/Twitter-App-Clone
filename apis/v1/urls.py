@@ -4,12 +4,15 @@ from rest_framework.routers import DefaultRouter
 
 from apps.accounts.views import AccountViewSet
 from apps.auth.views import RegisterAccountAPIView
+from apps.posts.views import CommentViewSet, PostViewSet
 from apps.profiles.views import ProfileViewSet
 
 router = DefaultRouter()
 
 router.register(r"accounts", AccountViewSet, basename="account")
 router.register(r"profiles", ProfileViewSet, basename="profile")
+router.register(r"posts", PostViewSet, basename="post")
+router.register(r"comments", CommentViewSet, basename="comment")
 
 
 urlpatterns = [
@@ -27,6 +30,4 @@ urlpatterns = [
         route="rest-auth/",
         view=include("rest_framework.urls"),
     ),
-]
-
-urlpatterns += router.urls
+] + router.urls
