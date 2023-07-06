@@ -9,3 +9,10 @@
 
 # Database
 db.sqlite3
+
+# Coverage
+.coverage
+
+# Media
+media/avatars/*
+!media/avatars/.gitkeep
