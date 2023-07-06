@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "twitter-app"
+version = "0.1.0"
+description = ""
+authors = ["Femi Kamau <83460313+femikamau@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "twitter_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.3"
+djangorestframework = "^3.14.0"
+pillow = "^10.0.0"
+django-filter = "^23.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+coverage = "^7.2.7"
+factory-boy = "^3.2.1"
+ipython = "^8.14.0"
+django-environ = "^0.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
