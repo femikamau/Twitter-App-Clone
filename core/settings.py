@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.profiles.apps.ProfilesConfig",
     "apps.posts.apps.PostsConfig",
+    "apps.friends.apps.FriendsConfig",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

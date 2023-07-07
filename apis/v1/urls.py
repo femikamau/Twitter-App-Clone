@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 
 from apps.accounts.views import AccountViewSet
 from apps.auth.views import RegisterAccountAPIView
+from apps.friends.views import FollowerViewSet, FollowingViewSet
 from apps.posts.views import CommentViewSet, PostViewSet
 from apps.profiles.views import ProfileViewSet
 
@@ -13,6 +14,8 @@ router.register(r"accounts", AccountViewSet, basename="account")
 router.register(r"profiles", ProfileViewSet, basename="profile")
 router.register(r"posts", PostViewSet, basename="post")
 router.register(r"comments", CommentViewSet, basename="comment")
+router.register(r"following", FollowingViewSet, basename="following")
+router.register(r"followers", FollowerViewSet, basename="follower")
 
 
 urlpatterns = [
