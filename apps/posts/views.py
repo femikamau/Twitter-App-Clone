@@ -1,7 +1,6 @@
 from rest_framework import viewsets
 
 from apps.utils.permissions import IsAuthor
-from apps.utils.viewsets import CreateListDestroyViewSet
 
 from .models import Comment, Post
 from .serializers import (
@@ -21,7 +20,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return ReadPostSerializer
 
 
-class CommentViewSet(CreateListDestroyViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (IsAuthor,)
