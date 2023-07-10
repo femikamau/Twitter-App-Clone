@@ -40,3 +40,20 @@ class Comment(TimeStampedModel):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+class Like(TimeStampedModel):
+    """
+    Like model
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="likes")
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name="likes")
+    updated_at = None
+
+    def __str__(self):
+        return f"{self.user} - Like: {self.id}"
+
+    class Meta:
+        ordering = ["-created_at"]

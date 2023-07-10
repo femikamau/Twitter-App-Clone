@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from apps.accounts.tests.factories import AccountFactory
-from apps.posts.models import Comment, Post
+from apps.posts.models import Comment, Like, Post
 
 
 class PostModelTestCase(TestCase):
@@ -64,3 +64,36 @@ class CommentModelTestCase(TestCase):
 
         self.assertEqual(Comment.objects.first(), comment2)
         self.assertEqual(Comment.objects.last(), self.comment)
+
+
+class LikeModelTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user = AccountFactory()
+        cls.user2 = AccountFactory()
+
+        cls.post = Post.objects.create(
+            user=cls.user,
+            content="Test content",
+        )
+
+        cls.like = Like.objects.create(
+            user=cls.user,
+            post=cls.post,
+        )
+
+    def test_like_creation(self):
+        test_like = Like.objects.get(id=self.like.id)
+
+        self.assertEqual(test_like.user, self.user)
+        self.assertEqual(test_like.post, self.post)
+        self.assertEqual(str(test_like), f"{self.user} - Like: {self.like.id}")
+
+    def test_like_ordering(self):
+        like2 = Like.objects.create(
+            user=self.user2,
+            post=self.post,
+        )
+
+        self.assertEqual(Like.objects.first(), like2)
+        self.assertEqual(Like.objects.last(), self.like)

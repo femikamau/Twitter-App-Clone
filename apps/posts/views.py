@@ -6,8 +6,9 @@ from rest_framework.response import Response
 from apps.utils.permissions import IsOwnerOrReadOnly
 from apps.utils.viewsets import RetrieveUpdateDestroyViewSet
 
-from .models import Comment, Post
+from .models import Comment, Like, Post
 from .serializers.comments import CommentSerializer
+from .serializers.likes import LikeSerializer
 from .serializers.posts import (
     ReadPostSerializer,
     WritePostSerializer,
@@ -75,6 +76,69 @@ class PostViewSet(RetrieveUpdateDestroyViewSet):
             serializer.save(user=request.user, post=post)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=["GET"], permission_classes=[])
+    def likes(self, request, pk=None):
+        post = self.get_object()
+
+        likes = Like.objects.filter(post=post)
+
+        page = self.paginate_queryset(likes)
+
+        if page is not None:
+            serializer = LikeSerializer(
+                page,
+                many=True,
+                context={"request": request},
+            )
+
+            return self.get_paginated_response(serializer.data)
+
+        serializer = LikeSerializer(
+            likes,
+            many=True,
+            context={"request": request},
+        )
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
+
+    @action(detail=True, methods=["POST"], permission_classes=[])
+    def like_post(self, request, pk=None):
+        post = self.get_object()
+
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if created:
+            return Response(
+                data={"detail": "Post liked successfully."},
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(
+            data={"detail": "Post already liked."}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action(detail=True, methods=["DELETE"], permission_classes=[])
+    def unlike_post(self, request, pk=None):
+        post = self.get_object()
+
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+        except Like.DoesNotExist:
+            return Response(
+                data={"detail": "Post not liked."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        like.delete()
+
+        return Response(
+            data={"detail": "Post unliked successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class CommentViewSet(RetrieveUpdateDestroyViewSet):

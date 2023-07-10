@@ -119,7 +119,7 @@ class ProfileViewSet(
 
             return self.get_paginated_response(serializer.data)
 
-    @action(detail=True)
+    @action(methods=["POST"], detail=True)
     def follow(self, request, user__username):
         username = user__username
 
@@ -146,7 +146,7 @@ class ProfileViewSet(
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    @action(detail=True)
+    @action(methods=["DELETE"], detail=True)
     def unfollow(self, request, user__username):
         username = user__username
 

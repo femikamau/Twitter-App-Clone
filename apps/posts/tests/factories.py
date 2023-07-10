@@ -2,7 +2,7 @@ import factory
 
 from apps.accounts.tests.factories import AccountFactory
 
-from ..models import Comment, Post
+from ..models import Comment, Like, Post
 
 
 class PostFactory(factory.django.DjangoModelFactory):
@@ -20,3 +20,11 @@ class CommentFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Comment
+
+
+class LikeFactory(factory.django.DjangoModelFactory):
+    user = factory.SubFactory(AccountFactory)
+    post = factory.SubFactory(PostFactory)
+
+    class Meta:
+        model = Like

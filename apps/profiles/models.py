@@ -15,5 +15,8 @@ class Profile(TimeStampedModel):
     bio = models.TextField(blank=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True)
 
+    class Meta:
+        ordering = ("-created_at",)
+
     def __str__(self) -> str:
         return f"{self.user.username}'s Profile"

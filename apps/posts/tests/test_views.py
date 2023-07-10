@@ -67,3 +67,112 @@ class PostViewSetTestCase(APITestCase):
         response = self.client.delete(reverse("post-detail", args=[self.post.id]))
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_create_comment(self):
+        self.client.force_authenticate(user=self.user)
+
+        url = reverse("post-comments", args=[self.post.id])
+
+        response = self.client.post(
+            url,
+            data={"content": "Test Comment"},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.post.comments.count(), 6)
+        self.assertEqual(self.post.comments.first().content, "Test Comment")
+
+    def test_read_comment(self):
+        self.client.force_authenticate(user=self.user)
+
+        url = reverse("post-comments", args=[self.post.id])
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.post.comments.count(), 5)
+
+    def test_update_comment(self):
+        # Assert that only the owner of the comment can update it
+
+        self.client.force_authenticate(user=self.user2)
+
+        url = reverse("comment-detail", args=[self.post.comments.first().id])
+
+        response = self.client.patch(url, data={"content": "Updated Comment"})
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.patch(url, data={"content": "Updated Comment"})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_comment(self):
+        # Assert that only the owner of the comment can delete it
+
+        self.client.force_authenticate(user=self.user2)
+
+        url = reverse("comment-detail", args=[self.post.comments.first().id])
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_create_like(self):
+        self.client.force_authenticate(user=self.user)
+
+        url = reverse("post-like-post", args=[self.post.id])
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.post.likes.count(), 1)
+
+        #  Assert that a user can only like a post once
+
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(self.post.likes.count(), 1)
+
+    def test_read_like(self):
+        self.client.force_authenticate(user=self.user)
+
+        url = reverse("post-likes", args=[self.post.id])
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.post.likes.count(), 0)
+
+    def test_delete_like(self):
+        self.client.force_authenticate(user=self.user)
+
+        like_url = reverse("post-like-post", args=[self.post.id])
+
+        unlike_url = reverse("post-unlike-post", args=[self.post.id])
+
+        response = self.client.post(like_url)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.post.likes.count(), 1)
+
+        response = self.client.delete(unlike_url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.post.likes.count(), 0)
+
+        # Assert that a user can only unlike a post once
+
+        response = self.client.delete(unlike_url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(self.post.likes.count(), 0)
