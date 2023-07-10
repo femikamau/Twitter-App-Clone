@@ -7,14 +7,12 @@ from apps.profiles.models import Profile
 User = get_user_model()
 
 
-class ProfileTestCase(TestCase):
+class ProfileModelTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.user = AccountFactory()
 
-    def test_profile_creation(self):
-        self.assertTrue(Profile.objects.filter(user=self.user).exists())
-        self.assertIsInstance(self.user.profile, Profile)
-        self.assertEqual(
-            str(Profile.objects.get(user=self.user)), f"{self.user.username}'s Profile"
-        )
+    def test_profile_instance(self):
+        self.assertEqual(Profile.objects.count(), 1)
+        self.assertTrue(isinstance(self.user.profile, Profile))
+        self.assertEqual(self.user.profile.__str__(), f"{self.user.username}'s Profile")
