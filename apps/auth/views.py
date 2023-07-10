@@ -15,7 +15,7 @@ class RegisterAccountAPIView(generics.CreateAPIView):
     permission_classes = (IsNotAuthenticated,)
 
 
-@api_view(["GET"])
+@api_view(["DELETE"])
 @permission_classes([permissions.IsAuthenticated])
 def logout_user(request):
     request.user.auth_token.delete()
@@ -24,5 +24,5 @@ def logout_user(request):
 
     return Response(
         data={"message": "You have been successfully logged out."},
-        status=status.HTTP_200_OK,
+        status=status.HTTP_204_NO_CONTENT,
     )
