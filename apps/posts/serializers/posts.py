@@ -30,6 +30,7 @@ class ReadPostSerializer(WritePostSerializer):
         representation = super().to_representation(instance)
 
         representation["comments"] = instance.comments.count()
+        representation["likes"] = instance.likes.count()
 
         return representation
 
