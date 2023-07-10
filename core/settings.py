@@ -15,9 +15,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 # Core Settings
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = "django-insecure-zdh!a$6@&83sdov-8j@_%esoz2(!e-kj4f(-g9)t$dz91w-y07"
 
-DEBUG = env("DEBUG", cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]
 
