@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "drf_spectacular",
     # Local
     "apps.accounts.apps.AccountsConfig",
     "apps.profiles.apps.ProfilesConfig",
@@ -156,4 +157,16 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+
+# DRF Spectacular Settings
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Twitter-App Clone API",
+    "DESCRIPTION": "A Twitter-App Clone API built with Django and Django REST Framework",
+    "VERSION": "1.0.0",
+    "SCHEMA_PATH_PREFIX": "/api/v1",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
