@@ -8,7 +8,9 @@ class AccountSerializer(serializers.ModelSerializer):
     User Serializer
     """
 
-    url = serializers.HyperlinkedIdentityField(view_name="account-detail")
+    url = serializers.HyperlinkedIdentityField(
+        view_name="account-detail",
+    )
 
     class Meta:
         model = User
